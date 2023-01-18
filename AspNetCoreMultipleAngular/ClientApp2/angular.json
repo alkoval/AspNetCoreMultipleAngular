@@ -68,7 +68,6 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "publicHost": "/clientapp2/"
           },
           "configurations": {
             "production": {
@@ -106,5 +105,8 @@
         }
       }
     }
+  },
+  "cli": {
+    "analytics": false
   }
 }

@@ -1,0 +1,6 @@
+{
+  "/clientapp2": {
+    "target": "http://localhost:44333",
+    "secure": false
+  }
+}
