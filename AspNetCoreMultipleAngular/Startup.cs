@@ -63,7 +63,65 @@ namespace AspNetCoreMultipleAngular
                     pattern: "{controller}/{action=Index}/{id?}");
             });
 
+            app.Map(new PathString("/clientapp"), client =>
+            {
+                var path = env.IsDevelopment() ? @"ClientApp3" : @"ClientApp3/dist/my-first-app";
+                var clientAppDist = new StaticFileOptions()
+                {
+                    FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), path))
+                };
+                client.UseSpaStaticFiles(clientAppDist);
+
+                if (env.IsDevelopment())
+                {
+                    client.UseSpa(spa =>
+                    {
+                        spa.Options.StartupTimeout = new TimeSpan(0, 5, 0);
+                        spa.Options.SourcePath = "ClientApp3";
+                        spa.UseAngularCliServer(npmScript: "start");
+                    });
+                }
+                else
+                {
+                    client.UseSpa(spa =>
+                    {
+                        spa.Options.StartupTimeout = new TimeSpan(0, 5, 0);
+                        spa.Options.SourcePath = "ClientApp3";
+                        spa.Options.DefaultPageStaticFileOptions = clientAppDist;
+                    });
+                }
+            });
+
             app.Map(new PathString("/clientapp2"), client =>
+            {
+                var path = env.IsDevelopment() ? @"ClientApp3" : @"ClientApp3/dist/my-second-app";
+                var clientAppDist = new StaticFileOptions()
+                {
+                    FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), path))
+                };
+                client.UseSpaStaticFiles(clientAppDist);
+
+                if (env.IsDevelopment())
+                {
+                    client.UseSpa(spa =>
+                    {
+                        spa.Options.StartupTimeout = new TimeSpan(0, 5, 0);
+                        spa.Options.SourcePath = "ClientApp3";
+                        spa.UseAngularCliServer(npmScript: "start-2");
+                    });
+                }
+                else
+                {
+                    client.UseSpa(spa =>
+                    {
+                        spa.Options.StartupTimeout = new TimeSpan(0, 5, 0);
+                        spa.Options.SourcePath = "ClientApp3";
+                        spa.Options.DefaultPageStaticFileOptions = clientAppDist;
+                    });
+                }
+            });
+
+            /*app.Map(new PathString("/clientapp2"), client =>
             {
                 var path = env.IsDevelopment() ? @"ClientApp2" : @"ClientApp2/dist";
                 var clientAppDist = new StaticFileOptions()
@@ -94,16 +152,13 @@ namespace AspNetCoreMultipleAngular
 
             app.UseSpa(spa =>
             {
-                // To learn more about options for serving an Angular SPA from ASP.NET Core,
-                // see https://go.microsoft.com/fwlink/?linkid=864501
-
                 spa.Options.SourcePath = "ClientApp";
 
                 if (env.IsDevelopment())
                 {
                     spa.UseAngularCliServer(npmScript: "start");
                 }
-            });
+            });*/
         }
     }
 }

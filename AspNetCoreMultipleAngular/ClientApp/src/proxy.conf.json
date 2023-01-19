@@ -1,0 +1,8 @@
+{
+  "/clientapp": {
+    "target": "https://localhost:44333",
+    "pathRewrite": { "^/clientapp": "/localhost/clientapp" },
+    "changeOrigin": true,
+    "ws": true
+  }
+}

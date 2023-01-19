@@ -1,0 +1,9 @@
+{
+  "/ng-cli-ws": {
+    "target": "https://localhost:44333",
+    "secure": false,
+    "pathRewrite": { "^/ng-cli-ws": "/clientapp2/ng-cli-ws" },
+    "changeOrigin": true,
+    "ws": true
+  }
+}
