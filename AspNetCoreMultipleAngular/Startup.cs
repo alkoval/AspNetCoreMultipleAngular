@@ -49,10 +49,10 @@ namespace AspNetCoreMultipleAngular
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-            if (!env.IsDevelopment())
+            /*if (!env.IsDevelopment())
             {
                 app.UseSpaStaticFiles();
-            }
+            }*/
 
             app.UseRouting();
 
@@ -63,9 +63,19 @@ namespace AspNetCoreMultipleAngular
                     pattern: "{controller}/{action=Index}/{id?}");
             });
 
+            app.Use(async (context, next) =>
+            {
+                if (context.Request.Path.Value == "/")
+                {
+                    context.Request.Path = "/clientapp";
+                }
+
+                await next();
+            });
+
             app.Map(new PathString("/clientapp"), client =>
             {
-                var path = env.IsDevelopment() ? @"ClientApp3" : @"ClientApp3/dist/my-first-app";
+                var path = env.IsDevelopment() ? @"ClientApp" : @"ClientApp/dist";
                 var clientAppDist = new StaticFileOptions()
                 {
                     FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), path))
@@ -77,7 +87,7 @@ namespace AspNetCoreMultipleAngular
                     client.UseSpa(spa =>
                     {
                         spa.Options.StartupTimeout = new TimeSpan(0, 5, 0);
-                        spa.Options.SourcePath = "ClientApp3";
+                        spa.Options.SourcePath = "ClientApp";
                         spa.UseAngularCliServer(npmScript: "start");
                     });
                 }
@@ -86,42 +96,13 @@ namespace AspNetCoreMultipleAngular
                     client.UseSpa(spa =>
                     {
                         spa.Options.StartupTimeout = new TimeSpan(0, 5, 0);
-                        spa.Options.SourcePath = "ClientApp3";
+                        spa.Options.SourcePath = "ClientApp";
                         spa.Options.DefaultPageStaticFileOptions = clientAppDist;
                     });
                 }
             });
 
             app.Map(new PathString("/clientapp2"), client =>
-            {
-                var path = env.IsDevelopment() ? @"ClientApp3" : @"ClientApp3/dist/my-second-app";
-                var clientAppDist = new StaticFileOptions()
-                {
-                    FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), path))
-                };
-                client.UseSpaStaticFiles(clientAppDist);
-
-                if (env.IsDevelopment())
-                {
-                    client.UseSpa(spa =>
-                    {
-                        spa.Options.StartupTimeout = new TimeSpan(0, 5, 0);
-                        spa.Options.SourcePath = "ClientApp3";
-                        spa.UseAngularCliServer(npmScript: "start-2");
-                    });
-                }
-                else
-                {
-                    client.UseSpa(spa =>
-                    {
-                        spa.Options.StartupTimeout = new TimeSpan(0, 5, 0);
-                        spa.Options.SourcePath = "ClientApp3";
-                        spa.Options.DefaultPageStaticFileOptions = clientAppDist;
-                    });
-                }
-            });
-
-            /*app.Map(new PathString("/clientapp2"), client =>
             {
                 var path = env.IsDevelopment() ? @"ClientApp2" : @"ClientApp2/dist";
                 var clientAppDist = new StaticFileOptions()
@@ -150,15 +131,63 @@ namespace AspNetCoreMultipleAngular
                 }
             });
 
-            app.UseSpa(spa =>
+            app.Map(new PathString("/clientapp3"), client =>
             {
-                spa.Options.SourcePath = "ClientApp";
+                var path = env.IsDevelopment() ? @"ClientApp3" : @"ClientApp3/dist/my-first-app";
+                var clientAppDist = new StaticFileOptions()
+                {
+                    FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), path))
+                };
+                client.UseSpaStaticFiles(clientAppDist);
 
                 if (env.IsDevelopment())
                 {
-                    spa.UseAngularCliServer(npmScript: "start");
+                    client.UseSpa(spa =>
+                    {
+                        spa.Options.StartupTimeout = new TimeSpan(0, 5, 0);
+                        spa.Options.SourcePath = "ClientApp3";
+                        spa.UseAngularCliServer(npmScript: "start");
+                    });
                 }
-            });*/
+                else
+                {
+                    client.UseSpa(spa =>
+                    {
+                        spa.Options.StartupTimeout = new TimeSpan(0, 5, 0);
+                        spa.Options.SourcePath = "ClientApp3";
+                        spa.Options.DefaultPageStaticFileOptions = clientAppDist;
+                    });
+                }
+            });
+
+            app.Map(new PathString("/clientapp3-2"), client =>
+            {
+                var path = env.IsDevelopment() ? @"ClientApp3" : @"ClientApp3/dist/my-second-app";
+                var clientAppDist = new StaticFileOptions()
+                {
+                    FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), path))
+                };
+                client.UseSpaStaticFiles(clientAppDist);
+
+                if (env.IsDevelopment())
+                {
+                    client.UseSpa(spa =>
+                    {
+                        spa.Options.StartupTimeout = new TimeSpan(0, 5, 0);
+                        spa.Options.SourcePath = "ClientApp3";
+                        spa.UseAngularCliServer(npmScript: "start-2");
+                    });
+                }
+                else
+                {
+                    client.UseSpa(spa =>
+                    {
+                        spa.Options.StartupTimeout = new TimeSpan(0, 5, 0);
+                        spa.Options.SourcePath = "ClientApp3";
+                        spa.Options.DefaultPageStaticFileOptions = clientAppDist;
+                    });
+                }
+            });
         }
     }
 }
