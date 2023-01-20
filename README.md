@@ -1,6 +1,7 @@
 # AspNetCoreMultipleAngular
 Solution was created for testing works with multiple client applications in one host.
-Solution has an issue in development mode that I didn't fix. Client apps are not created in WebSocketClient for live reload.
+
+Solution has an issue in development mode that I didn't fix. Client apps doesn't create connect to WebSocketClient for live reload.
 Similar error https://github.com/angular/angular-cli/issues/24373
 
 ### Backend
